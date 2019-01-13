@@ -17,6 +17,10 @@ To sample from the model saved in weights/ice_cream:
 `python textgenrnn_save_wrapper.py --model_name=ice_cream --n_gen=10 --temperature=0.2`
 `python textgenrnn_save_wrapper.py --model_name=ice_cream --n_gen=10 --temperature=0.2 --prefix='Chocolate'`
 
+To sample from the model saved in weights/ice_cream, but print to file instead of to the command line:
+
+`python textgenrnn_save_wrapper.py --model_name=ice_cream --generate_to_file=ice_cream_output.txt`
+
 ## Continue training an already-trained model
 
 Load a model from ice_cream, train on the text file in `'data/ice-cream/IceCream_sorted.txt'` and overwrite the model in ice_cream
