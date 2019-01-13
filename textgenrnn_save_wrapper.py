@@ -8,6 +8,8 @@ parser.add_argument("--model_name", default='test',
 					help="name of model & folder where it will be saved")
 parser.add_argument("--new_model", default=False,
 					help="Include to start training from scratch. Otherwise, will try to load a model from weights/model_name", action="store_true")
+parser.add_argument("--config_path", default='',
+					help="Location of configuration file to load for new models. Otherwise, will use default.")
 parser.add_argument("--num_epochs", type=int, default=0,
 					help="number of times training process will go through the entire training dataset. if 0, just generates samples.")
 parser.add_argument("--data_file", help="Location of training data file. Assumed to be in data folder")
@@ -27,6 +29,8 @@ parser.add_argument("--prefix", default='',
 					help="Starting text to use for sample generation")
 parser.add_argument("--max_gen_length", type=int, default=1000,
 					help="For sampling large_text models, the max length of a single sample")
+parser.add_argument("--generate_to_file", default='',
+					help="Specify a filename to generate to file instead of command line")
 
 # ---------------------------------------------------------------------------------------
 
@@ -57,6 +61,8 @@ n_gen = args.n_gen
 temperature = args.temperature
 prefix = args.prefix
 max_gen_length = args.max_gen_length
+config_path = args.config_path
+gen_path = args.generate_to_file
 
 # new_model = True
 # load_loc = 'weights/ice_cream'	#use if new_model=False
@@ -72,7 +78,7 @@ if not num_epochs == 0:
 		# -- start a new model (required if you want to save results) --
 
 		# start with default weights (these will be overwritten by the new model)-
-		my_model = textgenrnn()
+		my_model = textgenrnn(config_path=config_path)
 
 		# train from file (will output training progress to the command line)
 		if word_level:
@@ -125,4 +131,7 @@ else:
 	config_loc = os.path.join(load_loc,'textgenrnn_config.json')
 	my_model = textgenrnn(weights_path=weights_loc, vocab_path=vocab_loc, config_path=config_loc)
 
-	my_model.generate(n=n_gen, temperature=temperature, prefix=prefix, max_gen_length=max_gen_length)
+	if gen_path=='':
+		my_model.generate(n=n_gen, temperature=temperature, prefix=prefix, max_gen_length=max_gen_length)
+	else:
+		my_model.generate_to_file(gen_path, n=n_gen, temperature=temperature, prefix=prefix, max_gen_length=max_gen_length)
